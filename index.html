@@ -517,10 +517,12 @@
 
             hotspot.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (tooltip.classList.contains('opacity-0')) {
-                    showTooltip(e, title, desc);
-                } else {
+                // Если кликнули ровно по тому же активному хотспоту — закрываем его.
+                // Если кликнули по другому — переключаем на новый (сначала скрываем старый мгновенно, открываем новый).
+                if (activeHotspot === e.currentTarget) {
                     hideTooltip();
+                } else {
+                    showTooltip(e, title, desc);
                 }
             });
         });
