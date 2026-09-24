@@ -395,7 +395,7 @@
                 ? aboveY
                 : Math.min(rect.bottom + gap, window.innerHeight - padding - tooltipRect.height);
 
-            tooltip.style.left = `${x}px`;
+            tooltip.style.left = `${x - tooltipRect.width / 2}px`;
             tooltip.style.top = `${Math.max(padding, y)}px`;
         }
 
