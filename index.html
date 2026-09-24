@@ -23,7 +23,6 @@
     display: block;
     height: auto;
   }
-  /* Накладываем SVG прямо поверх картинки с точными пропорциями viewBox */
   .cassa-svg {
     position: absolute;
     top: 0;
@@ -32,24 +31,64 @@
     height: 100%;
   }
   .hotspot {
-    fill: rgba(0, 0, 0, 0.95);
-    stroke: red;
-    stroke-width: 2;
+    fill: transparent;
     cursor: pointer;
-    transition: fill 0.2s;
+    transition: fill 0.2s, stroke 0.2s;
   }
   .hotspot:hover {
-    fill: rgba(255, 255, 255, 0.25);
+    fill: rgba(255, 255, 255, 0.18);
+    stroke: rgba(255, 255, 255, 0.4);
+    stroke-width: 2;
+  }
+  .tooltip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    color: #1a1a1a;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: none;
+    z-index: 100;
   }
 </style>
 </head>
 <body>
+
 <div class="cassa-container">
   <img src="00.png" alt="Касса">
-  <!-- viewBox подбирается под реальное разрешение исходной картинки 00.png в пикселях -->
-  <svg class="cassa-svg" viewBox="0 0 1200 800">
-    <rect class="hotspot" x="400" y="250" width="300" height="300" />
+  
+  <svg class="cassa-svg" viewBox="0 0 3000 2077">
+    <!-- Ячейки по точным координатам из Photoshop -->
+    <rect class="hotspot" x="2573" y="1465" width="102" height="109" data-title="Ячейка 1" />
+    <rect class="hotspot" x="914" y="728" width="120" height="114" data-title="Ячейка 2" />
+    <rect class="hotspot" x="1298" y="410" width="117" height="108" data-title="Ячейка 3" />
+    <rect class="hotspot" x="884" y="1187" width="116" height="105" data-title="Ячейка 4" />
+    <rect class="hotspot" x="2649" y="1877" width="246" height="239" data-title="Ячейка 5" />
   </svg>
 </div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+  const hotspots = document.querySelectorAll('.hotspot');
+  const tooltip = document.getElementById('tooltip');
+
+  hotspots.forEach(spot => {
+    spot.addEventListener('mouseenter', () => {
+      tooltip.textContent = spot.dataset.title;
+      tooltip.style.display = 'block';
+    });
+    spot.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+  });
+</script>
+
 </body>
 </html>
