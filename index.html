@@ -23,33 +23,22 @@
     display: block;
     height: auto;
   }
-  .grid-overlay {
+  .hotspot {
     position: absolute;
-    /* Наложи точные проценты рамки самой кассы внутри картинки */
-    top: 20.3%; 
-    left: 14.1%; 
-    width: 77.5%; 
-    height: 72.5%;
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-  }
-  .cell {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.95);
     cursor: pointer;
     transition: background 0.2s;
   }
-  .cell:hover {
-    background: rgba(255, 255, 255, 0.18);
+  .hotspot:hover {
+    background: rgba(255, 255, 255, 0.25);
   }
 </style>
 </head>
 <body>
 <div class="cassa-container">
   <img src="00.png" alt="Касса">
-  <div class="grid-overlay">
-    <div class="cell" style="grid-column: 1 / span 2; grid-row: 1;"></div>
-  </div>
+  <!-- Тестовая ячейка залита черным для проверки попадания -->
+  <div class="hotspot" style="top: 50.3%; left: 33.6%; width: 6.2%; height: 11.2%;"></div>
 </div>
 </body>
 </html>
