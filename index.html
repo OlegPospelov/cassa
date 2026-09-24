@@ -12,7 +12,6 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   .cassa-container {
     position: relative;
@@ -24,76 +23,33 @@
     display: block;
     height: auto;
   }
-  .hotspot {
+  .grid-overlay {
     position: absolute;
+    /* Наложи точные проценты рамки самой кассы внутри картинки */
+    top: 20.3%; 
+    left: 14.1%; 
+    width: 77.5%; 
+    height: 72.5%;
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+  }
+  .cell {
     background: transparent;
     cursor: pointer;
-    transition: background 0.25s ease, box-shadow 0.25s ease;
+    transition: background 0.2s;
   }
-  .hotspot:hover {
+  .cell:hover {
     background: rgba(255, 255, 255, 0.18);
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3);
-  }
-  .tooltip {
-    position: absolute;
-    bottom: calc(100% + 14px);
-    left: 50%;
-    transform: translateX(-50%) translateY(6px);
-    background: #ffffff;
-    color: #1a1a1a;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.4;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-  }
-  .tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: #ffffff transparent transparent transparent;
-  }
-  .hotspot:hover .tooltip {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
   }
 </style>
 </head>
 <body>
-
 <div class="cassa-container">
   <img src="00.png" alt="Касса">
-
-  <!-- Все 18 областей по черным меткам -->
-  <div class="hotspot" style="top: 20.3%; left: 14.1%; width: 8.4%; height: 11.8%;"><div class="tooltip">1</div></div>
-  <div class="hotspot" style="top: 20.3%; left: 86.8%; width: 8.8%; height: 23.4%;"><div class="tooltip">2</div></div>
-  <div class="hotspot" style="top: 49.3%; left: 43.1%; width: 3.4%; height: 6.0%;"><div class="tooltip">3</div></div>
-  <div class="hotspot" style="top: 56.0%; left: 52.8%; width: 8.2%; height: 14.5%;"><div class="tooltip">4</div></div>
-  <div class="hotspot" style="top: 67.6%; left: 20.3%; width: 6.2%; height: 11.2%;"><div class="tooltip">5</div></div>
-  <div class="hotspot" style="top: 67.6%; left: 26.6%; width: 6.2%; height: 11.2%;"><div class="tooltip">6</div></div>
-  <div class="hotspot" style="top: 67.6%; left: 32.8%; width: 6.2%; height: 11.2%;"><div class="tooltip">7</div></div>
-  <div class="hotspot" style="top: 67.6%; left: 39.2%; width: 6.2%; height: 11.2%;"><div class="tooltip">8</div></div>
-  <div class="hotspot" style="top: 67.6%; left: 45.5%; width: 6.2%; height: 11.2%;"><div class="tooltip">9</div></div>
-  <div class="hotspot" style="top: 67.6%; left: 52.8%; width: 8.2%; height: 14.5%;"><div class="tooltip">10</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 16.5%; width: 6.2%; height: 10.4%;"><div class="tooltip">11</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 22.8%; width: 6.2%; height: 10.4%;"><div class="tooltip">12</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 29.2%; width: 6.2%; height: 10.4%;"><div class="tooltip">13</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 35.6%; width: 6.2%; height: 10.4%;"><div class="tooltip">14</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 42.0%; width: 6.2%; height: 10.4%;"><div class="tooltip">15</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 52.8%; width: 4.8%; height: 10.4%;"><div class="tooltip">16</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 58.0%; width: 3.2%; height: 10.4%;"><div class="tooltip">17</div></div>
-  <div class="hotspot" style="top: 79.9%; left: 61.4%; width: 5.0%; height: 10.4%;"><div class="tooltip">18</div></div>
+  <div class="grid-overlay">
+    <div class="cell" style="grid-column: 1 / span 2; grid-row: 1;"></div>
+  </div>
 </div>
-
 </body>
 </html>
