@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Интерактивная касса типографского набора</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +23,6 @@
             fill: transparent;
             stroke: none;
             transition: fill 0.2s ease;
-            touch-action: manipulation;
         }
         .hotspot:hover {
             fill: rgba(255, 255, 255, 0.08);
@@ -35,8 +34,6 @@
         }
         .pulse-marker {
             z-index: 1;
-            transform-origin: center center;
-            will-change: transform;
         }
         .pulse-marker::before {
             content: "";
@@ -59,12 +56,13 @@
             top: 0;
             width: 3000px;
             height: 2077px;
+            will-change: transform;
         }
         #viewport:active {
             cursor: grabbing;
         }
         #workspace {
-            touch-action: manipulation;
+            touch-action: none;
         }
         #tooltip {
             width: min(20rem, calc(100vw - 24px));
@@ -300,7 +298,7 @@
                 <!-- 111 --><rect x="1196" y="1413" width="85" height="219" class="hotspot" data-title="Объект №111" data-desc="Сувенирная флешка с символикой компании, с которой я сотрудничал многие годы, и которая оказала значительное влияние на историю моей семьи." />
                 <!-- 112 --><rect x="961" y="1502" width="202" height="130" class="hotspot" data-title="Объект №112" data-desc="Абонемент на плавание моего сына Ивана." />
                 <!-- 113 --><rect x="1979" y="1278" width="115" height="113" class="hotspot" data-title="Объект №113" data-desc="Сломанные направляющие от кондиционера нашей машины. Хотел починить, но пока не починил." />
-                <!-- 114 --><rect x="502" y="1653" width="97" height="229" class="hotspot" data-title="Objeto №114" data-desc="Магнит для холодильника - бутылка CocaCola. Непонятно откуда взялся." />
+                <!-- 114 --><rect x="502" y="1653" width="97" height="229" class="hotspot" data-title="Объект №114" data-desc="Магнит для холодильника - бутылка CocaCola. Непонятно откуда взялся." />
                 <!-- 115 --><rect x="614" y="1653" width="97" height="229" class="hotspot" data-title="Объект №115" data-desc="Чек из IKEA." />
                 <!-- 116 --><rect x="614" y="1408" width="97" height="229" class="hotspot" data-title="Объект №116" data-desc="Глиняное мороженное, сделанное Маргаритой. Разбилось при монтаже выставки. По моей вине." />
                 <!-- 117 --><rect x="725" y="1408" width="209" height="229" class="hotspot" data-title="Объект №117" data-desc="Игрушка Маргариты." />
@@ -319,7 +317,6 @@
     <script>
         const workspace = document.getElementById('workspace');
         const viewport = document.getElementById('viewport');
-        const pulseMarkers = document.querySelectorAll('.pulse-marker');
         const tooltip = document.getElementById('tooltip');
         const tooltipTitle = document.getElementById('tooltip-title');
         const tooltipDesc = document.getElementById('tooltip-desc');
@@ -335,13 +332,6 @@
 
         function updateTransform() {
             viewport.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-            
-            // Компенсируем зум контейнера, чтобы маркеры сохраняли постоянный размер на экране
-            const inverseScale = 1 / scale;
-            pulseMarkers.forEach(marker => {
-                marker.style.transform = `scale(${inverseScale})`;
-            });
-
             if (activeHotspot) {
                 positionTooltip(activeHotspot);
             }
@@ -359,6 +349,7 @@
         window.addEventListener('load', initCenter);
         window.addEventListener('resize', initCenter);
 
+        // Мышь
         workspace.addEventListener('mousedown', (e) => {
             panning = true;
             startX = e.clientX - translateX;
@@ -376,6 +367,7 @@
             panning = false;
         });
 
+        // Жесты мыши (колесико)
         workspace.addEventListener('wheel', (e) => {
             e.preventDefault();
             const zoomFactor = 1.1;
@@ -395,6 +387,68 @@
             updateTransform();
         }, { passive: false });
 
+        // Сенсорное управление (мобильные)
+        let initialDistance = null;
+        let initialScale = null;
+
+        workspace.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                panning = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            } else if (e.touches.length === 2) {
+                panning = false;
+                initialDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                initialScale = scale;
+            }
+        }, { passive: false });
+
+        workspace.addEventListener('touchmove', (e) => {
+            if (e.cancelable) e.preventDefault();
+            
+            if (e.touches.length === 1 && panning) {
+                translateX = e.touches[0].clientX - startX;
+                translateY = e.touches[0].clientY - startY;
+                updateTransform();
+            } else if (e.touches.length === 2 && initialDistance !== null) {
+                const currentDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                
+                const zoomFactor = currentDistance / initialDistance;
+                const oldScale = scale;
+                scale = Math.min(Math.max(initialScale * zoomFactor, 0.15), 4);
+
+                const rect = workspace.getBoundingClientRect();
+                const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+                const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+
+                translateX = centerX - (centerX - translateX) * (scale / oldScale);
+                translateY = centerY - (centerY - translateY) * (scale / oldScale);
+                
+                updateTransform();
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', (e) => {
+            if (e.touches.length < 2) {
+                initialDistance = null;
+                initialScale = null;
+            }
+            if (e.touches.length === 1) {
+                panning = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            } else if (e.touches.length === 0) {
+                panning = false;
+            }
+        });
+
+        // Позиционирование подсказок
         function positionTooltip(hotspot) {
             const rect = hotspot.getBoundingClientRect();
             const padding = 12;
