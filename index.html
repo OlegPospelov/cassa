@@ -64,6 +64,8 @@
         }
         #tooltip {
             max-width: calc(100vw - 24px);
+            max-height: calc(100vh - 24px);
+            overflow-y: auto;
             box-sizing: border-box;
         }
     </style>
@@ -301,9 +303,13 @@
         let startY = 0;
         let translateX = 0;
         let translateY = 0;
+        let activeHotspot = null;
 
         function updateTransform() {
             viewport.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            if (activeHotspot) {
+                positionTooltip(activeHotspot);
+            }
         }
 
         function initCenter() {
@@ -354,11 +360,8 @@
             updateTransform();
         }, { passive: false });
 
-        function showTooltip(e, title, desc) {
-            tooltipTitle.textContent = title;
-            tooltipDesc.textContent = desc;
-            
-            const rect = e.currentTarget.getBoundingClientRect();
+        function positionTooltip(hotspot) {
+            const rect = hotspot.getBoundingClientRect();
             const padding = 12;
             const gap = 12;
 
@@ -379,7 +382,15 @@
             tooltip.style.top = `${Math.max(padding, y)}px`;
         }
 
+        function showTooltip(e, title, desc) {
+            activeHotspot = e.currentTarget;
+            tooltipTitle.textContent = title;
+            tooltipDesc.textContent = desc;
+            positionTooltip(activeHotspot);
+        }
+
         function hideTooltip() {
+            activeHotspot = null;
             tooltip.classList.add('opacity-0');
         }
 
