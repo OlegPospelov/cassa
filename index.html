@@ -21,6 +21,7 @@
             fill: transparent;
             stroke: none;
             transition: fill 0.2s ease;
+            touch-action: manipulation;
         }
         .hotspot:hover {
             fill: rgba(255, 255, 255, 0.08);
@@ -31,7 +32,7 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
         .pulse-marker {
-            animation: pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            animation: none;
         }
         #viewport {
             transform-origin: 0 0;
@@ -44,6 +45,9 @@
         }
         #viewport:active {
             cursor: grabbing;
+        }
+        #workspace {
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -350,12 +354,16 @@
             tooltip.classList.add('opacity-0');
         }
 
+        const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
         hotspots.forEach(hotspot => {
             const title = hotspot.getAttribute('data-title');
             const desc = hotspot.getAttribute('data-desc');
 
-            hotspot.addEventListener('mouseenter', (e) => showTooltip(e, title, desc));
-            hotspot.addEventListener('mouseleave', hideTooltip);
+            if (canHover) {
+                hotspot.addEventListener('mouseenter', (e) => showTooltip(e, title, desc));
+                hotspot.addEventListener('mouseleave', hideTooltip);
+            }
 
             hotspot.addEventListener('click', (e) => {
                 e.stopPropagation();
