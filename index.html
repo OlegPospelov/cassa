@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Касса</title>
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .cassa-container {
+    position: relative;
+    max-width: 1400px;
+    width: 100%;
+  }
+  .cassa-container img {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+  .hotspot {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 102, 0, 0.9);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .modal {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.95);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 6px;
+    max-width: 90%;
+    text-align: center;
+    display: none;
+    z-index: 100;
+    font-family: sans-serif;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .modal.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<div class="cassa-container">
+  <img src="00.png" alt="Касса">
+  
+  <!-- Пример точки (координаты в процентах) -->
+  <div class="hotspot" style="top: 18%; left: 31%;" data-description="Косточка от персика. Персик съел я."></div>
+  <div class="hotspot" style="top: 25%; left: 26%;" data-description="Второе описание предмета"></div>
+</div>
+
+<div class="modal" id="modal"></div>
+
+<script>
+  const hotspots = document.querySelectorAll('.hotspot');
+  const modal = document.getElementById('modal');
+
+  hotspots.forEach(spot => {
+    spot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modal.textContent = spot.dataset.description;
+      modal.classList.add('active');
+    });
+  });
+
+  document.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>
