@@ -25,7 +25,7 @@
             transition: fill 0.2s ease;
         }
         .hotspot:hover {
-            fill: rgba(255, 255, 255, 0.08);
+            fill: rgba(0, 0, 0, 0.5);
         }
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
@@ -315,7 +315,7 @@
     </div>
 
     <!-- Интерактивная плашка-подсказка для десктопа -->
-    <div id="desktop-hint" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-zinc-900/90 border border-zinc-700 text-zinc-300 text-xs px-3 py-1.5 rounded-full pointer-events-none transition-opacity duration-300 z-40 hidden md:block">
+    <div id="desktop-hint" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-zinc-900/90 border border-zinc-700 text-zinc-300 text-xs px-3 py-1.5 rounded-full pointer-events-none transition-opacity duration-300 z-40 hidden md:block opacity-0">
         Зажмите <kbd class="bg-zinc-800 text-white px-1.5 py-0.5 rounded">Ctrl</kbd> + прокрутка для зума
     </div>
 
@@ -380,8 +380,6 @@
             const modifierPressed = isMac ? e.metaKey : e.ctrlKey;
 
             if (!modifierPressed) {
-                // Если Ctrl не зажаты, даем странице нормально скроллиться дальше
-                // Показываем подсказку пользователю при попытке крутить колесо без Ctrl
                 if (window.innerWidth >= 768) {
                     desktopHint.classList.remove('opacity-0');
                     clearTimeout(hintTimeout);
@@ -392,7 +390,6 @@
                 return; 
             }
 
-            // Если Ctrl зажат — зумим картинку и отменяем дефолтный скролл страницы
             e.preventDefault();
             const zoomFactor = 1.1;
             const oldScale = scale;
@@ -411,7 +408,7 @@
             updateTransform();
         }, { passive: false });
 
-        // Сенсорное управление (мобильные) продолжат работать как раньше (пинч-зум двумя пальцами)
+        // Сенсорное управление (мобильные)
         let initialDistance = null;
         let initialScale = null;
 
@@ -447,7 +444,7 @@
                 const oldScale = scale;
                 scale = Math.min(Math.max(initialScale * zoomFactor, 0.15), 4);
 
-                const rect = workspace.workspace ? workspace.getBoundingClientRect() : workspace.getBoundingClientRect();
+                const rect = workspace.getBoundingClientRect();
                 const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
                 const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
 
