@@ -69,6 +69,22 @@
             overflow-y: auto;
             box-sizing: border-box;
         }
+        @media (max-width: 640px) {
+            #tooltip {
+                width: 280px;
+                max-width: calc(100vw - 24px);
+                padding: 12px;
+                border-radius: 12px;
+            }
+            #tooltip-title {
+                font-size: 14px;
+                line-height: 1.25;
+            }
+            #tooltip-desc {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+        }
     </style>
 </head>
 <body class="w-screen h-screen select-none overflow-hidden bg-black">
