@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Интерактивная касса типографского набора</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -314,6 +314,11 @@
         <div class="absolute left-1/2 -bottom-1.5 transform -translate-x-1/2 w-3 h-3 bg-black border-r border-b border-zinc-800 rotate-45"></div>
     </div>
 
+    <!-- Интерактивная плашка-подсказка для десктопа -->
+    <div id="desktop-hint" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-zinc-900/90 border border-zinc-700 text-zinc-300 text-xs px-3 py-1.5 rounded-full pointer-events-none transition-opacity duration-300 z-40 hidden md:block">
+        Зажмите <kbd class="bg-zinc-800 text-white px-1.5 py-0.5 rounded">Ctrl</kbd> + прокрутка для зума
+    </div>
+
     <script>
         const workspace = document.getElementById('workspace');
         const viewport = document.getElementById('viewport');
@@ -321,6 +326,7 @@
         const tooltipTitle = document.getElementById('tooltip-title');
         const tooltipDesc = document.getElementById('tooltip-desc');
         const hotspots = document.querySelectorAll('.hotspot');
+        const desktopHint = document.getElementById('desktop-hint');
 
         let scale = 1;
         let panning = false;
@@ -329,6 +335,7 @@
         let translateX = 0;
         let translateY = 0;
         let activeHotspot = null;
+        let hintTimeout = null;
 
         function updateTransform() {
             viewport.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
@@ -349,7 +356,7 @@
         window.addEventListener('load', initCenter);
         window.addEventListener('resize', initCenter);
 
-        // Мышь
+        // Мышь (перетаскивание)
         workspace.addEventListener('mousedown', (e) => {
             panning = true;
             startX = e.clientX - translateX;
@@ -367,8 +374,25 @@
             panning = false;
         });
 
-        // Жесты мыши (колесико)
+        // Исправление зума на десктопе: требуем зажатый Ctrl (или Cmd на Mac) для колесика
         workspace.addEventListener('wheel', (e) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const modifierPressed = isMac ? e.metaKey : e.ctrlKey;
+
+            if (!modifierPressed) {
+                // Если Ctrl не зажаты, даем странице нормально скроллиться дальше
+                // Показываем подсказку пользователю при попытке крутить колесо без Ctrl
+                if (window.innerWidth >= 768) {
+                    desktopHint.classList.remove('opacity-0');
+                    clearTimeout(hintTimeout);
+                    hintTimeout = setTimeout(() => {
+                        desktopHint.classList.add('opacity-0');
+                    }, 2000);
+                }
+                return; 
+            }
+
+            // Если Ctrl зажат — зумим картинку и отменяем дефолтный скролл страницы
             e.preventDefault();
             const zoomFactor = 1.1;
             const oldScale = scale;
@@ -387,7 +411,7 @@
             updateTransform();
         }, { passive: false });
 
-        // Сенсорное управление (мобильные)
+        // Сенсорное управление (мобильные) продолжат работать как раньше (пинч-зум двумя пальцами)
         let initialDistance = null;
         let initialScale = null;
 
@@ -423,7 +447,7 @@
                 const oldScale = scale;
                 scale = Math.min(Math.max(initialScale * zoomFactor, 0.15), 4);
 
-                const rect = workspace.getBoundingClientRect();
+                const rect = workspace.workspace ? workspace.getBoundingClientRect() : workspace.getBoundingClientRect();
                 const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
                 const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
 
