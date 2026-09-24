@@ -23,51 +23,33 @@
     display: block;
     height: auto;
   }
-  .tooltip-box {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #fff;
-    color: #1a1a1a;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    display: none;
-    z-index: 100;
+  /* Накладываем SVG прямо поверх картинки с точными пропорциями viewBox */
+  .cassa-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hotspot {
+    fill: rgba(0, 0, 0, 0.95);
+    stroke: red;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: fill 0.2s;
+  }
+  .hotspot:hover {
+    fill: rgba(255, 255, 255, 0.25);
   }
 </style>
 </head>
 <body>
-
 <div class="cassa-container">
-  <img src="00.png" alt="Касса" usemap="#cassa-map">
-  
-  <map name="cassa-map">
-    <!-- Пример тестовой зоны (координаты полигона x1,y1, x2,y2...) -->
-    <area shape="rect" coords="420,290,675,570" href="#" alt="Центральный блок" data-title="Черный квадрат из теста">
-  </map>
+  <img src="00.png" alt="Касса">
+  <!-- viewBox подбирается под реальное разрешение исходной картинки 00.png в пикселях -->
+  <svg class="cassa-svg" viewBox="0 0 1200 800">
+    <rect class="hotspot" x="400" y="250" width="300" height="300" />
+  </svg>
 </div>
-
-<div class="tooltip-box" id="tooltip"></div>
-
-<script>
-  const areas = document.querySelectorAll('area');
-  const tooltip = document.getElementById('tooltip');
-
-  areas.forEach(area => {
-    area.addEventListener('mouseenter', (e) => {
-      tooltip.textContent = area.dataset.title;
-      tooltip.style.display = 'block';
-    });
-    area.addEventListener('mouseleave', () => {
-      tooltip.style.display = 'none';
-    });
-  });
-</script>
-
 </body>
 </html>
