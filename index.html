@@ -1,60 +1,375 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Касса</title>
-<style>
-  body {
-    margin: 0;
-    background: #0b0b0b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  .cassa-container {
-    position: relative;
-    max-width: 1300px;
-    width: 100%;
-  }
-  .cassa-container img {
-    width: 100%;
-    display: block;
-    height: auto;
-  }
-  /* Вешаем сетку прямо на сам элемент изображения через CSS Grid */
-  .cassa-grid {
-    position: absolute;
-    top: 20.3%;
-    left: 14.1%;
-    width: 77.4%;
-    height: 72.3%;
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(14, 1fr);
-  }
-  .cell {
-    background: rgba(0, 0, 0, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .cell:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная касса типографского набора</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000000;
+        }
+        .hotspot {
+            cursor: pointer;
+            fill: transparent;
+            stroke: none;
+            transition: fill 0.2s ease;
+        }
+        .hotspot:hover {
+            fill: rgba(255, 255, 255, 0.08);
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        .pulse-marker {
+            animation: pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        #viewport {
+            transform-origin: 0 0;
+            cursor: grab;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3000px;
+            height: 2077px;
+        }
+        #viewport:active {
+            cursor: grabbing;
+        }
+    </style>
 </head>
-<body>
+<body class="w-screen h-screen select-none overflow-hidden bg-black">
 
-<div class="cassa-container">
-  <img src="00.png" alt="Касса">
-  
-  <div class="cassa-grid">
-    <!-- Тестируем одну ячейку по сетке кассы -->
-    <div class="cell" style="grid-column: 4 / span 2; grid-row: 2 / span 2;"></div>
-  </div>
-</div>
+    <main id="workspace" class="w-full h-full relative overflow-hidden bg-black">
+        <div id="viewport">
+            <img 
+                src="https://raw.githubusercontent.com/OlegPospelov/cassa/main/00.png" 
+                alt="Касса с буквами" 
+                class="absolute inset-0 w-[3000px] h-[2077px] pointer-events-none opacity-90"
+                crossorigin="anonymous"
+                onerror="this.src='https://placehold.co/3000x2077/000000/ffffff?text=Image+Load+Error'"
+            >
 
+            <!-- 1 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 535.78px; top: 542.7px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 2 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2488.45px; top: 1772.11px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 3 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 870.5px; top: 269.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 4 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1507px; top: 370.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 5 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1954.5px; top: 363px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 6 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2346px; top: 392px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 7 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2644.5px; top: 669.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 8 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2537.5px; top: 548.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 9 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2296px; top: 549.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 10 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1200px; top: 551.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 11 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 814px; top: 671.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 12 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2429.5px; top: 668.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 13 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2297px; top: 665.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 14 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2166px; top: 665.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 15 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2039px; top: 665.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 16 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1329.5px; top: 669.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 17 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 554.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 18 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 815.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 19 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1072.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 20 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1328.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 21 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1462.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 22 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1773.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 23 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1905.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 24 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2033.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 25 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2162.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 26 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2430.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 27 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2550px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 28 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2428px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 29 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2298px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 30 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2037px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 31 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1906px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 32 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1774px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 33 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1641px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 34 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1510px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 35 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1332px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 36 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1198px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 37 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1074px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 38 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 681px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 39 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 551px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 40 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 299.5px; top: 715.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+
+            <!-- 49 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 543.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 50 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 662.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 51 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 776.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 52 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 893px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 53 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1007px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 54 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1349px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 55 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1640.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 61 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1774.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 62 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1903.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 63 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2030.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 64 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2163.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 65 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2292.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 66 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2419.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 67 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2555.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 68 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 544.5px; top: 1223.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 69 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 663.5px; top: 1281.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 70 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 793.5px; top: 1337px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 76 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1064.5px; top: 1345px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 77 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1469px; top: 1309.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 78 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1296px; top: 1324.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 79 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1276px; top: 1220.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 80 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2425px; top: 1217px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 81 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2556px; top: 1339px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 82 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2556px; top: 1466px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 83 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2294px; top: 1453px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 84 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2426px; top: 1327px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 85 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2556px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 86 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2423px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 87 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2299px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 88 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2163px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 90 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2165.5px; top: 1461px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 91 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2291px; top: 1331.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 95 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 834px; top: 1771px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 96 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1434px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 97 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1267px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 98 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1670px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 99 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1780px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 100 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2034px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 101 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1971.5px; top: 1693.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 102 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2161.5px; top: 1796px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 103 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2295px; top: 1773px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 104 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 878px; top: 1235.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 105 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1686.5px; top: 1300.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 106 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1413.5px; top: 1523.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 107 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2160px; top: 1275.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 108 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1900px; top: 1520.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 109 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2031px; top: 1561.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 110 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1698px; top: 1560px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 111 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1238.5px; top: 1522.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 112 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1061.5px; top: 1567px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 113 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2036.5px; top: 1334.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 114 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 550.5px; top: 1767.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 115 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 662.5px; top: 1767.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 116 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 662.5px; top: 1522.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 117 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 829.5px; top: 1522.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 118 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1065px; top: 1770.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 119 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 284px; top: 1696.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+
+            <svg viewBox="0 0 3000 2077" class="absolute inset-0 w-[3000px] h-[2077px]">
+                <!-- 1 --><rect x="427.78" y="439.20" width="216" height="207" class="hotspot" data-title="Объект №1" data-desc="Координаты: X: 535.78, Y: 542.7" />
+                <!-- 2 --><rect x="2362.95" y="1652.11" width="251" height="240" class="hotspot" data-title="Объект №2" data-desc="Координаты: X: 2488.45, Y: 1772.11" />
+                <!-- 3 --><rect x="581" y="108" width="579" height="323" class="hotspot" data-title="Объект №3" data-desc="Координаты: X: 870.5, Y: 269.5" />
+                <!-- 4 --><rect x="1321" y="308" width="372" height="125" class="hotspot" data-title="Объект №4" data-desc="Координаты: X: 1507, Y: 370.5" />
+                <!-- 5 --><rect x="1760" y="295" width="389" height="136" class="hotspot" data-title="Объект №5" data-desc="Координаты: X: 1954.5, Y: 363" />
+                <!-- 6 --><rect x="2155" y="347" width="382" height="90" class="hotspot" data-title="Объект №6" data-desc="Координаты: X: 2346, Y: 392" />
+                <!-- 7 --><rect x="2585" y="435" width="119" height="469" class="hotspot" data-title="Объект №7" data-desc="Координаты: X: 2644.5, Y: 669.5" />
+                <!-- 8 --><rect x="2495" y="492" width="85" height="113" class="hotspot" data-title="Объект №8" data-desc="Координаты: X: 2537.5, Y: 548.5" />
+                <!-- 9 --><rect x="2243" y="493" width="106" height="113" class="hotspot" data-title="Объект №9" data-desc="Координаты: X: 2296, Y: 549.5" />
+                <!-- 10 --><rect x="1146" y="495" width="108" height="113" class="hotspot" data-title="Объект №10" data-desc="Координаты: X: 1200, Y: 551.5" />
+                <!-- 11 --><rect x="753" y="615" width="122" height="113" class="hotspot" data-title="Объект №11" data-desc="Координаты: X: 814, Y: 671.5" />
+                <!-- 12 --><rect x="2371" y="612" width="117" height="113" class="hotspot" data-title="Объект №12" data-desc="Координаты: X: 2429.5, Y: 668.5" />
+                <!-- 13 --><rect x="2242" y="609" width="110" height="113" class="hotspot" data-title="Объект №13" data-desc="Координаты: X: 2297, Y: 665.5" />
+                <!-- 14 --><rect x="2110" y="609" width="112" height="113" class="hotspot" data-title="Объект №14" data-desc="Координаты: X: 2166, Y: 665.5" />
+                <!-- 15 --><rect x="1984" y="609" width="110" height="113" class="hotspot" data-title="Объект №15" data-desc="Координаты: X: 2039, Y: 665.5" />
+                <!-- 16 --><rect x="1273" y="617" width="113" height="105" class="hotspot" data-title="Объект №16" data-desc="Координаты: X: 1329.5, Y: 669.5" />
+                <!-- 17 --><rect x="498" y="744" width="113" height="105" class="hotspot" data-title="Объект №17" data-desc="Координаты: X: 554.5, Y: 796.5" />
+                <!-- 18 --><rect x="759" y="744" width="113" height="105" class="hotspot" data-title="Объект №18" data-desc="Координаты: X: 815.5, Y: 796.5" />
+                <!-- 19 --><rect x="1016" y="744" width="113" height="105" class="hotspot" data-title="Объект №19" data-desc="Координаты: X: 1072.5, Y: 796.5" />
+                <!-- 20 --><rect x="1272" y="744" width="113" height="105" class="hotspot" data-title="Объект №20" data-desc="Координаты: X: 1328.5, Y: 796.5" />
+                <!-- 21 --><rect x="1406" y="744" width="113" height="105" class="hotspot" data-title="Объект №21" data-desc="Координаты: X: 1462.5, Y: 796.5" />
+                <!-- 22 --><rect x="1717" y="744" width="113" height="105" class="hotspot" data-title="Объект №22" data-desc="Координаты: X: 1773.5, Y: 796.5" />
+                <!-- 23 --><rect x="1849" y="744" width="113" height="105" class="hotspot" data-title="Объект №23" data-desc="Координаты: X: 1905.5, Y: 796.5" />
+                <!-- 24 --><rect x="1977" y="744" width="113" height="105" class="hotspot" data-title="Объект №24" data-desc="Координаты: X: 2033.5, Y: 796.5" />
+                <!-- 25 --><rect x="2106" y="744" width="113" height="105" class="hotspot" data-title="Объект №25" data-desc="Координаты: X: 2162.5, Y: 796.5" />
+                <!-- 26 --><rect x="2374" y="744" width="113" height="105" class="hotspot" data-title="Объект №26" data-desc="Координаты: X: 2430.5, Y: 796.5" />
+                <!-- 27 --><rect x="2502" y="744" width="96" height="105" class="hotspot" data-title="Объект №27" data-desc="Координаты: X: 2550, Y: 796.5" />
+                <!-- 28 --><rect x="2371" y="870" width="114" height="105" class="hotspot" data-title="Объект №28" data-desc="Координаты: X: 2428, Y: 922.5" />
+                <!-- 29 --><rect x="2241" y="870" width="114" height="105" class="hotspot" data-title="Объект №29" data-desc="Координаты: X: 2298, Y: 922.5" />
+                <!-- 30 --><rect x="1980" y="870" width="114" height="105" class="hotspot" data-title="Объект №30" data-desc="Координаты: X: 2037, Y: 922.5" />
+                <!-- 31 --><rect x="1849" y="870" width="114" height="105" class="hotspot" data-title="Объект №31" data-desc="Координаты: X: 1906, Y: 922.5" />
+                <!-- 32 --><rect x="1717" y="870" width="114" height="105" class="hotspot" data-title="Объект №32" data-desc="Координаты: X: 1774, Y: 922.5" />
+                <!-- 33 --><rect x="1584" y="870" width="114" height="105" class="hotspot" data-title="Объект №33" data-desc="Координаты: X: 1641, Y: 922.5" />
+                <!-- 34 --><rect x="1403" y="870" width="114" height="105" class="hotspot" data-title="Объект №34" data-desc="Координаты: X: 1510, Y: 922.5" />
+                <!-- 35 --><rect x="1275" y="870" width="114" height="105" class="hotspot" data-title="Объект №35" data-desc="Координаты: X: 1332, Y: 922.5" />
+                <!-- 36 --><rect x="1141" y="870" width="114" height="105" class="hotspot" data-title="Объект №36" data-desc="Координаты: X: 1198, Y: 922.5" />
+                <!-- 37 --><rect x="1017" y="870" width="114" height="105" class="hotspot" data-title="Объект №37" data-desc="Координаты: X: 1074, Y: 922.5" />
+                <!-- 38 --><rect x="624" y="870" width="114" height="105" class="hotspot" data-title="Объект №38" data-desc="Координаты: X: 681, Y: 922.5" />
+                <!-- 39 --><rect x="494" y="870" width="114" height="105" class="hotspot" data-title="Объект №39" data-desc="Координаты: X: 551, Y: 922.5" />
+                <!-- 40 --><rect x="178" y="548" width="243" height="335" class="hotspot" data-title="Объект №40" data-desc="Координаты: X: 299.5, Y: 715.5" />
+                <!-- 49 --><rect x="493" y="1039" width="101" height="110" class="hotspot" data-title="Объект №49" data-desc="Координаты: X: 543.5, Y: 1094" />
+                <!-- 50 --><rect x="612" y="1039" width="101" height="110" class="hotspot" data-title="Объект №50" data-desc="Координаты: X: 662.5, Y: 1094" />
+                <!-- 51 --><rect x="726" y="1039" width="101" height="110" class="hotspot" data-title="Объект №51" data-desc="Координаты: X: 776.5, Y: 1094" />
+                <!-- 52 --><rect x="842" y="1039" width="102" height="110" class="hotspot" data-title="Объект №52" data-desc="Координаты: X: 893, Y: 1094" />
+                <!-- 53 --><rect x="956" y="1039" width="102" height="110" class="hotspot" data-title="Объект №53" data-desc="Координаты: X: 1007, Y: 1094" />
+                <!-- 54 --><rect x="1298" y="1039" width="102" height="110" class="hotspot" data-title="Объект №54" data-desc="Координаты: X: 1349, Y: 1094" />
+                <!-- 55 --><rect x="1583" y="1039" width="115" height="110" class="hotspot" data-title="Объект №55" data-desc="Координаты: X: 1640.5, Y: 1094" />
+                <!-- 61 --><rect x="1720" y="1039" width="109" height="110" class="hotspot" data-title="Объект №61" data-desc="Координаты: X: 1774.5, Y: 1094" />
+                <!-- 62 --><rect x="1849" y="1039" width="109" height="110" class="hotspot" data-title="Объект №62" data-desc="Координаты: X: 1903.5, Y: 1094" />
+                <!-- 63 --><rect x="1976" y="1039" width="109" height="110" class="hotspot" data-title="Объект №63" data-desc="Координаты: X: 2030.5, Y: 1094" />
+                <!-- 64 --><rect x="2109" y="1039" width="109" height="110" class="hotspot" data-title="Объект №64" data-desc="Координаты: X: 2163.5, Y: 1094" />
+                <!-- 65 --><rect x="2238" y="1039" width="109" height="110" class="hotspot" data-title="Объект №65" data-desc="Координаты: X: 2292.5, Y: 1094" />
+                <!-- 66 --><rect x="2365" y="1039" width="109" height="110" class="hotspot" data-title="Объект №66" data-desc="Координаты: X: 2419.5, Y: 1094" />
+                <!-- 67 --><rect x="2501" y="1039" width="109" height="110" class="hotspot" data-title="Объект №67" data-desc="Координаты: X: 2555.5, Y: 1094" />
+                <!-- 68 --><rect x="494" y="1170" width="101" height="107" class="hotspot" data-title="Объект №68" data-desc="Координаты: X: 544.5, Y: 1223.5" />
+                <!-- 69 --><rect x="613" y="1170" width="101" height="223" class="hotspot" data-title="Объект №69" data-desc="Координаты: X: 663.5, Y: 1281.5" />
+                <!-- 70 --><rect x="737" y="1281" width="113" height="112" class="hotspot" data-title="Объект №70" data-desc="Координаты: X: 793.5, Y: 1337" />
+                <!-- 76 --><rect x="960" y="1302" width="209" height="86" class="hotspot" data-title="Объект №76" data-desc="Координаты: X: 1064.5, Y: 1345" />
+                <!-- 77 --><rect x="1409" y="1228" width="120" height="163" class="hotspot" data-title="Объект №77" data-desc="Координаты: X: 1469, Y: 1309.5" />
+                <!-- 78 --><rect x="1184" y="1258" width="224" height="133" class="hotspot" data-title="Объект №78" data-desc="Координаты: X: 1296, Y: 1324.5" />
+                <!-- 79 --><rect x="1220" y="1160" width="112" height="121" class="hotspot" data-title="Объект №79" data-desc="Координаты: X: 1276, Y: 1220.5" />
+                <!-- 80 --><rect x="2369" y="1168" width="112" height="98" class="hotspot" data-title="Объект №80" data-desc="Координаты: X: 2425, Y: 1217" />
+                <!-- 81 --><rect x="2500" y="1290" width="112" height="98" class="hotspot" data-title="Объект №81" data-desc="Координаты: X: 2556, Y: 1339" />
+                <!-- 82 --><rect x="2500" y="1417" width="112" height="98" class="hotspot" data-title="Объект №82" data-desc="Координаты: X: 2556, Y: 1466" />
+                <!-- 83 --><rect x="2238" y="1391" width="112" height="124" class="hotspot" data-title="Объект №83" data-desc="Координаты: X: 2294, Y: 1453" />
+                <!-- 84 --><rect x="2370" y="1274" width="112" height="106" class="hotspot" data-title="Объект №84" data-desc="Координаты: X: 2426, Y: 1327" />
+                <!-- 85 --><rect x="2500" y="1533" width="112" height="98" class="hotspot" data-title="Объект №85" data-desc="Координаты: X: 2556, Y: 1582" />
+                <!-- 86 --><rect x="2367" y="1533" width="112" height="98" class="hotspot" data-title="Объект №86" data-desc="Координаты: X: 2423, Y: 1582" />
+                <!-- 87 --><rect x="2243" y="1533" width="112" height="98" class="hotspot" data-title="Объект №87" data-desc="Координаты: X: 2299, Y: 1582" />
+                <!-- 88 --><rect x="2107" y="1533" width="112" height="98" class="hotspot" data-title="Объект №88" data-desc="Координаты: X: 2163, Y: 1582" />
+                <!-- 90 --><rect x="2112" y="1408" width="107" height="106" class="hotspot" data-title="Объект №90" data-desc="Координаты: X: 2165.5, Y: 1461" />
+                <!-- 91 --><rect x="2244" y="1271" width="94" height="121" class="hotspot" data-title="Объект №91" data-desc="Координаты: X: 2291, Y: 1331.5" />
+                <!-- 95 --><rect x="732" y="1656" width="204" height="230" class="hotspot" data-title="Объект №95" data-desc="Координаты: X: 834, Y: 1771" />
+                <!-- 96 --><rect x="1332" y="1735" width="204" height="151" class="hotspot" data-title="Объект №96" data-desc="Координаты: X: 1434, Y: 1810.5" />
+                <!-- 97 --><rect x="1191" y="1735" width="152" height="151" class="hotspot" data-title="Объект №97" data-desc="Координаты: X: 1267, Y: 1810.5" />
+                <!-- 98 --><rect x="1590" y="1735" width="160" height="151" class="hotspot" data-title="Объект №98" data-desc="Координаты: X: 1670, Y: 1810.5" />
+                <!-- 99 --><rect x="1736" y="1735" width="88" height="151" class="hotspot" data-title="Объект №99" data-desc="Координаты: X: 1780, Y: 1810.5" />
+                <!-- 100 --><rect x="1981" y="1735" width="106" height="151" class="hotspot" data-title="Объект №100" data-desc="Координаты: X: 2034, Y: 1810.5" />
+                <!-- 101 --><rect x="1854" y="1658" width="235" height="71" class="hotspot" data-title="Объект №101" data-desc="Координаты: X: 1971.5, Y: 1693.5" />
+                <!-- 102 --><rect x="2102" y="1710" width="119" height="172" class="hotspot" data-title="Объект №102" data-desc="Координаты: X: 2161.5, Y: 1796" />
+                <!-- 103 --><rect x="2238" y="1661" width="114" height="224" class="hotspot" data-title="Объект №103" data-desc="Координаты: X: 2295, Y: 1773" />
+                <!-- 104 --><rect x="821" y="1179" width="114" height="113" class="hotspot" data-title="Объект №104" data-desc="Координаты: X: 878, Y: 1235.5" />
+                <!-- 105 --><rect x="1586" y="1208" width="201" height="185" class="hotspot" data-title="Объект №105" data-desc="Координаты: X: 1686.5, Y: 1300.5" />
+                <!-- 106 --><rect x="1305" y="1411" width="217" height="225" class="hotspot" data-title="Объект №106" data-desc="Координаты: X: 1413.5, Y: 1523.5" />
+                <!-- 107 --><rect x="2112" y="1163" width="96" height="225" class="hotspot" data-title="Объект №107" data-desc="Координаты: X: 2160, Y: 1275.5" />
+                <!-- 108 --><rect x="1852" y="1408" width="96" height="225" class="hotspot" data-title="Объект №108" data-desc="Координаты: X: 1900, Y: 1520.5" />
+                <!-- 109 --><rect x="1983" y="1492" width="96" height="138" class="hotspot" data-title="Объект №109" data-desc="Координаты: X: 2031, Y: 1561.5" />
+                <!-- 110 --><rect x="1585" y="1485" width="226" height="150" class="hotspot" data-title="Объект №110" data-desc="Координаты: X: 1698, Y: 1560" />
+                <!-- 111 --><rect x="1196" y="1413" width="85" height="219" class="hotspot" data-title="Объект №111" data-desc="Координаты: X: 1238.5, Y: 1522.5" />
+                <!-- 112 --><rect x="961" y="1502" width="202" height="130" class="hotspot" data-title="Объект №112" data-desc="Координаты: X: 1061.5, Y: 1567" />
+                <!-- 113 --><rect x="1979" y="1278" width="115" height="113" class="hotspot" data-title="Объект №113" data-desc="Координаты: X: 2036.5, Y: 1334.5" />
+                <!-- 114 --><rect x="502" y="1653" width="97" height="229" class="hotspot" data-title="Объект №114" data-desc="Координаты: X: 550.5, Y: 1767.5" />
+                <!-- 115 --><rect x="614" y="1653" width="97" height="229" class="hotspot" data-title="Объект №115" data-desc="Координаты: X: 662.5, Y: 1767.5" />
+                <!-- 116 --><rect x="614" y="1408" width="97" height="229" class="hotspot" data-title="Объект №116" data-desc="Координаты: X: 662.5, Y: 1522.5" />
+                <!-- 117 --><rect x="725" y="1408" width="209" height="229" class="hotspot" data-title="Объект №117" data-desc="Координаты: X: 829.5, Y: 1522.5" />
+                <!-- 118 --><rect x="963" y="1656" width="204" height="229" class="hotspot" data-title="Объект №118" data-desc="Координаты: X: 1065, Y: 1770.5" />
+                <!-- 119 --><rect x="182" y="1582" width="204" height="229" class="hotspot" data-title="Объект №119" data-desc="Координаты: X: 182, Y: 1582" />
+            </svg>
+        </div>
+    </main>
+
+    <div id="tooltip" class="fixed pointer-events-none opacity-0 transition-opacity duration-200 z-50 bg-black text-white px-4 py-3 rounded-xl shadow-2xl border border-zinc-800 backdrop-blur-md max-w-xs transform -translate-x-1/2 -translate-y-full mb-3">
+        <div id="tooltip-title" class="font-bold text-sm text-orange-500 mb-1"></div>
+        <div id="tooltip-desc" class="text-xs text-zinc-300 leading-relaxed"></div>
+        <div class="absolute left-1/2 -bottom-1.5 transform -translate-x-1/2 w-3 h-3 bg-black border-r border-b border-zinc-800 rotate-45"></div>
+    </div>
+
+    <script>
+        const workspace = document.getElementById('workspace');
+        const viewport = document.getElementById('viewport');
+        const tooltip = document.getElementById('tooltip');
+        const tooltipTitle = document.getElementById('tooltip-title');
+        const tooltipDesc = document.getElementById('tooltip-desc');
+        const hotspots = document.querySelectorAll('.hotspot');
+
+        let scale = 1;
+        let panning = false;
+        let startX = 0;
+        let startY = 0;
+        let translateX = 0;
+        let translateY = 0;
+
+        function updateTransform() {
+            viewport.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function initCenter() {
+            const containerW = workspace.clientWidth;
+            const containerH = workspace.clientHeight;
+            scale = Math.min(containerW / 3000, containerH / 2077) * 0.95;
+            translateX = (containerW - 3000 * scale) / 2;
+            translateY = (containerH - 2077 * scale) / 2;
+            updateTransform();
+        }
+
+        window.addEventListener('load', initCenter);
+        window.addEventListener('resize', initCenter);
+
+        workspace.addEventListener('mousedown', (e) => {
+            panning = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!panning) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            panning = false;
+        });
+
+        workspace.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = 1.1;
+            const oldScale = scale;
+            if (e.deltaY < 0) {
+                scale = Math.min(scale * zoomFactor, 4);
+            } else {
+                scale = Math.max(scale / zoomFactor, 0.15);
+            }
+
+            const rect = workspace.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            translateX = mouseX - (mouseX - translateX) * (scale / oldScale);
+            translateY = mouseY - (mouseY - translateY) * (scale / oldScale);
+            updateTransform();
+        }, { passive: false });
+
+        function showTooltip(e, title, desc) {
+            tooltipTitle.textContent = title;
+            tooltipDesc.textContent = desc;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top;
+
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+            tooltip.classList.remove('opacity-0');
+        }
+
+        function hideTooltip() {
+            tooltip.classList.add('opacity-0');
+        }
+
+        hotspots.forEach(hotspot => {
+            const title = hotspot.getAttribute('data-title');
+            const desc = hotspot.getAttribute('data-desc');
+
+            hotspot.addEventListener('mouseenter', (e) => showTooltip(e, title, desc));
+            hotspot.addEventListener('mouseleave', hideTooltip);
+
+            hotspot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (tooltip.classList.contains('opacity-0')) {
+                    showTooltip(e, title, desc);
+                } else {
+                    hideTooltip();
+                }
+            });
+        });
+
+        document.addEventListener('click', () => {
+            hideTooltip();
+        });
+    </script>
 </body>
 </html>
