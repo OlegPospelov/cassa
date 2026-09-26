@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Интерактивная касса типографского набора</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000000;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        .hotspot {
+            cursor: pointer;
+            fill: transparent;
+            stroke: none;
+            transition: fill 0.2s ease;
+        }
+        .hotspot:hover {
+            fill: rgba(0, 0, 0, 0.5);
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        .pulse-marker {
+            z-index: 1;
+        }
+        .pulse-marker::before {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: inherit;
+            animation: pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            pointer-events: none;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pulse-marker::before {
+                animation: none;
+            }
+        }
+        #viewport {
+            transform-origin: 0 0;
+            cursor: grab;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3000px;
+            height: 2077px;
+            will-change: transform;
+        }
+        #viewport:active {
+            cursor: grabbing;
+        }
+        #workspace {
+            touch-action: none;
+        }
+        #tooltip {
+            width: min(20rem, calc(100vw - 24px));
+            max-width: calc(100vw - 24px);
+            box-sizing: border-box;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        @media (max-width: 640px) {
+            #tooltip {
+                width: 280px;
+                max-width: calc(100vw - 24px);
+                padding: 12px;
+                border-radius: 12px;
+            }
+            #tooltip-title {
+                font-size: 14px;
+                line-height: 1.25;
+            }
+            #tooltip-desc {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+        }
+    </style>
+</head>
+<body class="w-screen h-screen select-none overflow-hidden bg-black">
+
+    <main id="workspace" class="w-full h-full relative overflow-hidden bg-black">
+        <div id="viewport">
+            <img 
+                src="https://raw.githubusercontent.com/OlegPospelov/cassa/main/00.png" 
+                alt="Касса с буквами" 
+                class="absolute inset-0 w-[3000px] h-[2077px] pointer-events-none opacity-90"
+                crossorigin="anonymous"
+                onerror="this.src='https://placehold.co/3000x2077/000000/ffffff?text=Image+Load+Error'"
+            >
+
+            <!-- 1 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 535.78px; top: 542.7px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 2 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2488.45px; top: 1772.11px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 3 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 870.5px; top: 269.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 4 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1507px; top: 370.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 5 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1954.5px; top: 363px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 6 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2346px; top: 392px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 7 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2644.5px; top: 669.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 8 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2537.5px; top: 548.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 9 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2296px; top: 549.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 10 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1200px; top: 551.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 11 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 814px; top: 671.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 12 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2429.5px; top: 668.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 13 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2297px; top: 665.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 14 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2166px; top: 665.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 15 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2039px; top: 665.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 16 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1329.5px; top: 669.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 17 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 554.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 18 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 815.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 19 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1072.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 20 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1328.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 21 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1462.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 22 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1773.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 23 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1905.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 24 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2033.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 25 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2162.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 26 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2430.5px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 27 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2550px; top: 796.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 28 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2428px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 29 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2298px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 30 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2037px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 31 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1906px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 32 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1774px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 33 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1641px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 34 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1510px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 35 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1332px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 36 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1198px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 37 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1074px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 38 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 681px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 39 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 551px; top: 922.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 40 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 299.5px; top: 715.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 41 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 457px; top: 1016px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 42 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1279px; top: 1909px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 43 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1910px; top: 1842.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+
+            <!-- 44 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 543.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 45 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 662.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 46 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 776.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 47 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 893px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 48 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1007px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 49 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1349px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 50 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1640.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 51 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1774.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 52 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1903.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 53 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2030.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 54 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2163.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 55 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2292.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 56 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2419.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 57 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2555.5px; top: 1094px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 58 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 544.5px; top: 1223.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 59 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 663.5px; top: 1281.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 60 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 793.5px; top: 1337px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 61 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1064.5px; top: 1345px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 62 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1469px; top: 1309.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 63 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1296px; top: 1324.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 64 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1276px; top: 1220.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 65 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2425px; top: 1217px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 66 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2556px; top: 1339px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 67 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2556px; top: 1466px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 68 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2294px; top: 1453px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 69 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2426px; top: 1327px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 70 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2556px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 71 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2423px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 72 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2299px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 73 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2163px; top: 1582px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 74 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2165.5px; top: 1461px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 75 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2291px; top: 1331.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 76 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 834px; top: 1771px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 77 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1434px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 78 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1267px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 79 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1670px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 80 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1780px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 81 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2034px; top: 1810.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 82 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1971.5px; top: 1693.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 83 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2161.5px; top: 1796px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 84 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2295px; top: 1773px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 85 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 878px; top: 1235.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 86 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1686.5px; top: 1300.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 87 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1413.5px; top: 1523.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 88 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2160px; top: 1275.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 89 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1900px; top: 1520.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 90 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2031px; top: 1561.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 91 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1698px; top: 1560px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 92 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1238.5px; top: 1522.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 93 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1061.5px; top: 1567px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 94 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 2036.5px; top: 1334.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 95 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 550.5px; top: 1767.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 96 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 662.5px; top: 1767.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 97 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 662.5px; top: 1522.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 98 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 829.5px; top: 1522.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 99 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 1065px; top: 1770.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+            <!-- 100 --><div class="absolute w-7 h-7 -ml-3.5 -mt-3.5 rounded-full bg-white/90 border-2 border-black/40 shadow-lg pulse-marker pointer-events-none flex items-center justify-center" style="left: 284px; top: 1696.5px;"><div class="w-2 h-2 rounded-full bg-black"></div></div>
+
+            <svg viewBox="0 0 3000 2077" class="absolute inset-0 w-[3000px] h-[2077px]">
+<!-- 1 --><rect x="427.78" y="439.20" width="216" height="207" class="hotspot" data-title="Object No. 1" data-desc="A note from Margarita asking for more phone time. The English text comes first, followed by the Russian. This is because Margarita did not have a Russian keyboard on her phone for a long time, and we communicated in English since my Spanish is not very good." />
+                <!-- 2 --><rect x="2362.95" y="1652.11" width="251" height="240" class="hotspot" data-title="Object No. 2" data-desc="An ATC (Artist Trading Card) made by Margarita." />
+                <!-- 3 --><rect x="581" y="108" width="579" height="323" class="hotspot" data-title="Object No. 3" data-desc="Nastia's 'L' sign (auto adhesivo de conductor novel)." />
+                <!-- 4 --><rect x="1321" y="308" width="372" height="125" class="hotspot" data-title="Object No. 4" data-desc="Margarita's old glasses, which she has outgrown." />
+                <!-- 5 --><rect x="1760" y="295" width="389" height="136" class="hotspot" data-title="Object No. 5" data-desc="You ruin mine, I ruin yours. A very personal story." />
+                <!-- 6 --><rect x="2155" y="347" width="382" height="90" class="hotspot" data-title="Object No. 6" data-desc="A collectible set of matchbox labels. Brought by our friend Natasha from Portugal." />
+                <!-- 7 --><rect x="2585" y="435" width="119" height="469" class="hotspot" data-title="Object No. 7" data-desc="Book Day bookmark that Margarita brought from a trip to the WARNER BROS amusement park." />
+                <!-- 8 --><rect x="2495" y="492" width="85" height="113" class="hotspot" data-title="Object No. 8" data-desc="Self-adhesive Christmas decoration. Purchased in 2025." />
+                <!-- 9 --><rect x="2243" y="493" width="106" height="113" class="hotspot" data-title="Object No. 9" data-desc="A tiny bath duck." />
+                <!-- 10 --><rect x="1146" y="495" width="108" height="113" class="hotspot" data-title="Object No. 10" data-desc="Peach pit. I ate the peach." />
+                <!-- 11 --><rect x="753" y="615" width="122" height="113" class="hotspot" data-title="Object No. 11" data-desc="Solder wire from a kit Ivan bought at Lidl when we lived in the south. Nothing was ever successfully soldered with it." />
+                <!-- 12 --><rect x="2371" y="612" width="117" height="113" class="hotspot" data-title="Object No. 12" data-desc="Margarita's bracelet. It's a bit childish, which is why she doesn't wear it now." />
+                <!-- 13 --><rect x="2242" y="609" width="110" height="113" class="hotspot" data-title="Object No. 13" data-desc="A die from a Chinese shop, which I tried to use to explain probability theory—something I don't understand very well myself." />
+                <!-- 14 --><rect x="2110" y="609" width="112" height="113" class="hotspot" data-title="Object No. 14" data-desc="Margarita's sock that became too small for her long ago." />
+                <!-- 15 --><rect x="1984" y="609" width="110" height="113" class="hotspot" data-title="Object No. 15" data-desc="A pelmeni-shaped fridge magnet made by Margarita." />
+                <!-- 16 --><rect x="1273" y="617" width="113" height="105" class="hotspot" data-title="Object No. 16" data-desc="USB connector for an unknown device. It's here because I hope the device will turn up sooner or later." />
+                <!-- 17 --><rect x="498" y="744" width="113" height="105" class="hotspot" data-title="Object No. 17" data-desc="Bracelet belonging to Yeray, Margarita's boyfriend." />
+                <!-- 18 --><rect x="759" y="744" width="113" height="105" class="hotspot" data-title="Object No. 18" data-desc="IKEA candle. I don't remember its etymology." />
+                <!-- 19 --><rect x="1016" y="744" width="113" height="105" class="hotspot" data-title="Object No. 19" data-desc="Flag from an IKEA restaurant—they stick those flags into meatballs there." />
+                <!-- 20 --><rect x="1272" y="744" width="113" height="105" class="hotspot" data-title="Object No. 20" data-desc="Sink drain gasket—I bought several spares when I was cleaning the siphon." />
+                <!-- 21 --><rect x="1406" y="744" width="113" height="105" class="hotspot" data-title="Object No. 21" data-desc="Hair tie." />
+                <!-- 22 --><rect x="1717" y="744" width="113" height="105" class="hotspot" data-title="Object No. 22" data-desc="Candy wrapper that Margarita shoved into the cash register when I asked her to bring something for the exhibition." />
+                <!-- 23 --><rect x="1849" y="744" width="113" height="105" class="hotspot" data-title="Object No. 23" data-desc="GOI polishing paste. Brought from Russia by our friend Marina." />
+                <!-- 24 --><rect x="1977" y="744" width="113" height="105" class="hotspot" data-title="Object No. 24" data-desc="Electric Christmas candle. It stood in our house during Christmas 2025." />
+                <!-- 25 --><rect x="2106" y="744" width="113" height="105" class="hotspot" data-title="Object No. 25" data-desc="Coordinates: X: 2162.5, Y: 796.5" />
+                <!-- 26 --><rect x="2374" y="744" width="113" height="105" class="hotspot" data-title="Object No. 26" data-desc="Some nonsense. Unidentified." />
+                <!-- 27 --><rect x="2502" y="744" width="96" height="105" class="hotspot" data-title="Object No. 27" data-desc="A bent ring I found while walking the dogs." />
+                <!-- 28 --><rect x="2371" y="870" width="114" height="105" class="hotspot" data-title="Object No. 28" data-desc="A seashell with a hole. A gift from our friend Masha specifically for the exhibition." />
+                <!-- 29 --><rect x="2241" y="870" width="114" height="105" class="hotspot" data-title="Object No. 29" data-desc="Rita's keepsake pebble from the beach." />
+                <!-- 30 --><rect x="1980" y="870" width="114" height="105" class="hotspot" data-title="Object No. 30" data-desc="Old-type audio plug - DIN 2, bought by me in China to test an old amplifier. Didn't come in handy." />
+                <!-- 31 --><rect x="1849" y="870" width="114" height="105" class="hotspot" data-title="Object No. 31" data-desc="Hair tie." />
+                <!-- 32 --><rect x="1717" y="870" width="114" height="105" class="hotspot" data-title="Object No. 32" data-desc="Stubs from lottery tickets with which Margarita raised money for her class trip for fin de turno." />
+                <!-- 33 --><rect x="1584" y="870" width="114" height="105" class="hotspot" data-title="Object No. 33" data-desc="A roll of electrical insulating tape that I tried to use for masking when printing monotypes. Didn't like it—the tape is thick and inelastic." />
+                <!-- 34 --><rect x="1403" y="870" width="114" height="105" class="hotspot" data-title="Object No. 34" data-desc="Clay cup and spoon made by Margarita. The spoon broke during transport." />
+                <!-- 35 --><rect x="1275" y="870" width="114" height="105" class="hotspot" data-title="Object No. 35" data-desc="Clay cup made by Margarita." />
+                <!-- 36 --><rect x="1141" y="870" width="114" height="105" class="hotspot" data-title="Object No. 36" data-desc="This is old stationery adhesive tape. The adhesive layer has dried up, and it peeled off paper wonderfully—it was great for making masks on paper or a silicone plate, it worked ideally. Pity it's almost gone. Bought at a flea market in Santa Cruz." />
+                <!-- 37 --><rect x="1017" y="870" width="114" height="105" class="hotspot" data-title="Object No. 37" data-desc="Keys to the entrance door and mailbox of our first apartment in Santa Cruz." />
+                <!-- 38 --><rect x="624" y="870" width="114" height="105" class="hotspot" data-title="Object No. 38" data-desc="Swiss 2-franc coin from Rita's collection." />
+                <!-- 39 --><rect x="494" y="870" width="114" height="105" class="hotspot" data-title="Object No. 39" data-desc="Swiss 5-franc coin from Rita's collection." />
+                <!-- 40 --><rect x="178" y="548" width="243" height="335" class="hotspot" data-title="Object No. 40" data-desc="A very pretty piece of paper. Just a pretty piece of paper. It has my calligraphy on it and something else." />
+                <!-- 41 --><rect x="427" y="962" width="60" height="108" class="hotspot" data-title="Object No. 41" data-desc="A keychain shaped like one of the Mario brothers. Margarita wore it attached to her backpack for a long time until it tore near the neck. Margarita asked me to fix it; I said it was practically impossible, but took it and put it in a box. Never fixed it. During exhibition setup, the head broke off." />
+                <!-- 42 --><rect x="1249" y="1896" width="60" height="26" class="hotspot" data-title="Object No. 42" data-desc="Sticker from a roll of dog waste bags." />
+                <!-- 43 --><rect x="1880" y="1817" width="60" height="51" class="hotspot" data-title="Object No. 43" data-desc="Inkwell from a calligraphy set given to me by our friend Masha, thanks to which I started experimenting with a calligraphy nib." />
+                <!-- 44 --><rect x="493" y="1039" width="101" height="110" class="hotspot" data-title="Object No. 44" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 45 --><rect x="612" y="1039" width="101" height="110" class="hotspot" data-title="Object No. 45" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 46 --><rect x="726" y="1039" width="101" height="110" class="hotspot" data-title="Object No. 46" data-desc="Orangutan figure from Kinder Surprise. Duplicate, Margarita doesn't need it." />
+                <!-- 47 --><rect x="842" y="1039" width="102" height="110" class="hotspot" data-title="Object No. 47" data-desc="Turtle figure from Kinder Surprise. Duplicate, Margarita doesn't need it." />
+                <!-- 48 --><rect x="956" y="1039" width="102" height="110" class="hotspot" data-title="Object No. 48" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 49 --><rect x="1298" y="1039" width="102" height="110" class="hotspot" data-title="Object No. 49" data-desc="Figure of a wise man from Roscón de Reyes. Margarita got it." />
+                <!-- 50 --><rect x="1583" y="1039" width="115" height="110" class="hotspot" data-title="Object No. 50" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 51 --><rect x="1720" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 51" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 52 --><rect x="1849" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 52" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 53 --><rect x="1976" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 53" data-desc="Coordinates: X: 2030.5, Y: 1094" />
+                <!-- 54 --><rect x="2109" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 54" data-desc="Pendant imitating an oriental coin. Found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 55 --><rect x="2238" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 55" data-desc="Candy wrapper that Margarita shoved into the cash register when I asked her to bring something for the exhibition." />
+                <!-- 56 --><rect x="2365" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 56" data-desc="Page from a notepad with the coordinates of the print shop where I was going to print the exhibition catalog, but didn't find the money." />
+                <!-- 57 --><rect x="2501" y="1039" width="109" height="110" class="hotspot" data-title="Object No. 57" data-desc="Stubs from Margarita's school charity lottery." />
+                <!-- 58 --><rect x="494" y="1170" width="101" height="107" class="hotspot" data-title="Object No. 58" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 59 --><rect x="613" y="1170" width="101" height="223" class="hotspot" data-title="Object No. 59" data-desc="Margarita's bracelet. It's a bit childish, which is why she doesn't wear it now." />
+                <!-- 60 --><rect x="737" y="1281" width="113" height="112" class="hotspot" data-title="Object No. 60" data-desc="Rita's keepsake pebble from the beach." />
+                <!-- 61 --><rect x="960" y="1302" width="209" height="86" class="hotspot" data-title="Object No. 61" data-desc="Cigarette rolling machine. I quit smoking with it." />
+                <!-- 62 --><rect x="1409" y="1228" width="120" height="163" class="hotspot" data-title="Object No. 62" data-desc="Miniature deck of cards. Added by Margarita before the exhibition." />
+                <!-- 63 --><rect x="1184" y="1258" width="224" height="133" class="hotspot" data-title="Object No. 63" data-desc="My last Russian business card. 500 gsm, silk-screen printed, by the way." />
+                <!-- 64 --><rect x="1220" y="1160" width="112" height="121" class="hotspot" data-title="Object No. 64" data-desc="Probably a children's bracelet." />
+                <!-- 65 --><rect x="2369" y="1168" width="112" height="98" class="hotspot" data-title="Object No. 65" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 66 --><rect x="2500" y="1290" width="112" height="98" class="hotspot" data-title="Object No. 66" data-desc="Paper star made by Margarita." />
+                <!-- 67 --><rect x="2500" y="1417" width="112" height="98" class="hotspot" data-title="Object No. 67" data-desc="Fountain pen ink cartridge. Unclear how it got here." />
+                <!-- 68 --><rect x="2238" y="1391" width="112" height="124" class="hotspot" data-title="Object No. 68" data-desc="My passport photo." />
+                <!-- 69 --><rect x="2370" y="1274" width="112" height="106" class="hotspot" data-title="Object No. 69" data-desc="Electrical wiring mount. Something from my son Ivan's collection." />
+                <!-- 70 --><rect x="2500" y="1533" width="112" height="98" class="hotspot" data-title="Object No. 70" data-desc="Ring from old keys. Taken out of circulation because the ring set was optimized and simplified." />
+                <!-- 71 --><rect x="2367" y="1533" width="112" height="98" class="hotspot" data-title="Object No. 71" data-desc="Margarita's piece made of some polymer with plastic eyes." />
+                <!-- 72 --><rect x="2243" y="1533" width="112" height="98" class="hotspot" data-title="Object No. 72" data-desc="Old Spanish coins found by Nastia at the dog walking area in La Granja Park." />
+                <!-- 73 --><rect x="2107" y="1533" width="112" height="98" class="hotspot" data-title="Object No. 73" data-desc="Toy dinosaur. Don't remember where it came from." />
+                <!-- 74 --><rect x="2112" y="1408" width="107" height="106" class="hotspot" data-title="Object No. 74" data-desc="Nastia's residency photo." />
+                <!-- 75 --><rect x="2244" y="1271" width="94" height="121" class="hotspot" data-title="Object No. 75" data-desc="Photo of Margarita in her first year after moving to Santa Cruz." />
+                <!-- 76 --><rect x="732" y="1656" width="204" height="230" class="hotspot" data-title="Object No. 76" data-desc="Candles from Margarita's birthday cake." />
+                <!-- 77 --><rect x="1332" y="1735" width="204" height="151" class="hotspot" data-title="Object No. 77" data-desc="My gym pass for the sports center in Puerto de Santiago. Made in 2015." />
+                <!-- 78 --><rect x="1191" y="1735" width="152" height="151" class="hotspot" data-title="Object No. 78" data-desc="Clay star, author: Margarita." />
+                <!-- 79 --><rect x="1590" y="1735" width="160" height="151" class="hotspot" data-title="Object No. 79" data-desc="Triangular silicone board for printing monotypes with applied acrylic layers. Everything was ready for printing, but it didn't work out. Technique test for the 'Golden Forest' series." />
+                <!-- 80 --><rect x="1736" y="1735" width="88" height="151" class="hotspot" data-title="Object No. 80" data-desc="Nastia's gym pass for the sports center in Puerto de Santiago. Made in 2015." />
+                <!-- 81 --><rect x="1981" y="1735" width="106" height="151" class="hotspot" data-title="Object No. 81" data-desc="Ivan's gym pass for the sports center in Puerto de Santiago. Made in 2015." />
+                <!-- 82 --><rect x="1854" y="1658" width="235" height="71" class="hotspot" data-title="Object No. 82" data-desc="Old newspaper with my calligraphic writing over the top. It was a draft for a work, but wasn't used." />
+                <!-- 83 --><rect x="2102" y="1710" width="119" height="172" class="hotspot" data-title="Object No. 83" data-desc="Rita's keepsake pebble from the beach." />
+                <!-- 84 --><rect x="2238" y="1661" width="114" height="224" class="hotspot" data-title="Object No. 84" data-desc="Margarita's surprise to herself." />
+                <!-- 85 --><rect x="821" y="1179" width="114" height="113" class="hotspot" data-title="Object No. 85" data-desc="A keychain shaped like one of the Mario brothers. Margarita wore it attached to her backpack for a long time until it tore near the neck. Margarita asked me to fix it; I said it was practically impossible, but took it and put it in a box. Never fixed it. During exhibition setup, the head broke off." />
+                <!-- 86 --><rect x="1586" y="1208" width="201" height="185" class="hotspot" data-title="Object No. 86" data-desc="Garage remote control belonging to my friend Sasha, where I used to wash my car while we lived in the south of the island." />
+                <!-- 87 --><rect x="1305" y="1411" width="217" height="225" class="hotspot" data-title="Object No. 87" data-desc="Calligraphic letter from my friends Emine, Eni, and Elina." />
+                <!-- 88 --><rect x="2112" y="1163" width="96" height="225" class="hotspot" data-title="Object No. 88" data-desc="Photo of Margarita during her studies at SEIP Salamanca." />
+                <!-- 89 --><rect x="1852" y="1408" width="96" height="225" class="hotspot" data-title="Object No. 89" data-desc="Toy ORIO packaging made by Margarita." />
+                <!-- 90 --><rect x="1983" y="1492" width="96" height="138" class="hotspot" data-title="Object No. 90" data-desc="Photo of Margarita. 2014-2015. I don't remember why it's laminated." />
+                <!-- 91 --><rect x="1585" y="1485" width="226" height="150" class="hotspot" data-title="Object No. 91" data-desc="Margarita's gym pass for the sports center in Puerto de Santiago. Made in 2015." />
+                <!-- 92 --><rect x="1196" y="1413" width="85" height="219" class="hotspot" data-title="Object No. 92" data-desc="Souvenir USB flash drive with the logo of a company I collaborated with for many years, which had a significant impact on my family's history." />
+                <!-- 93 --><rect x="961" y="1502" width="202" height="130" class="hotspot" data-title="Object No. 93" data-desc="Ivan's swimming pass." />
+                <!-- 94 --><rect x="1979" y="1278" width="115" height="113" class="hotspot" data-title="Object No. 94" data-desc="Broken guides from our car's air conditioner. Wanted to fix them, but haven't yet." />
+                <!-- 95 --><rect x="502" y="1653" width="97" height="229" class="hotspot" data-title="Object No. 95" data-desc="Fridge magnet - a Coca-Cola bottle. Unclear where it came from." />
+                <!-- 96 --><rect x="614" y="1653" width="97" height="229" class="hotspot" data-title="Object No. 96" data-desc="IKEA receipt." />
+                <!-- 97 --><rect x="614" y="1408" width="97" height="229" class="hotspot" data-title="Object No. 97" data-desc="Clay ice cream made by Margarita. Broke during exhibition setup. My fault." />
+                <!-- 98 --><rect x="725" y="1408" width="209" height="229" class="hotspot" data-title="Object No. 98" data-desc="Margarita's toy." />
+                <!-- 99 --><rect x="963" y="1656" width="204" height="229" class="hotspot" data-title="Object No. 99" data-desc="A set of defective hair clips from Mercadona. Bought by me by mistake and needed by no one. A monument to my inattentiveness." />
+                <!-- 100 --><rect x="182" y="1582" width="204" height="229" class="hotspot" data-title="Object No. 100" data-desc="Neolithic bull figurine. An accidental, yet true masterpiece by Nastia." />
+            </svg>
+        </div>
+    </main>
+
+    <div id="tooltip" class="fixed pointer-events-none opacity-0 transition-opacity duration-200 z-50 bg-black text-white px-4 py-3 rounded-xl shadow-2xl border border-zinc-800 backdrop-blur-md max-w-xs transform -translate-x-1/2 -translate-y-full mb-3">
+        <div id="tooltip-title" class="font-bold text-sm text-orange-500 mb-1"></div>
+        <div id="tooltip-desc" class="text-xs text-zinc-300 leading-relaxed"></div>
+        <div class="absolute left-1/2 -bottom-1.5 transform -translate-x-1/2 w-3 h-3 bg-black border-r border-b border-zinc-800 rotate-45"></div>
+    </div>
+
+    <!-- Интерактивная плашка-подсказка для десктопа -->
+    <div id="desktop-hint" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-zinc-900/90 border border-zinc-700 text-zinc-300 text-xs px-3 py-1.5 rounded-full pointer-events-none transition-opacity duration-300 z-40 hidden md:block opacity-0">
+        Зажмите <kbd class="bg-zinc-800 text-white px-1.5 py-0.5 rounded">Ctrl</kbd> + прокрутка для зума
+    </div>
+
+    <script>
+        const workspace = document.getElementById('workspace');
+        const viewport = document.getElementById('viewport');
+        const tooltip = document.getElementById('tooltip');
+        const tooltipTitle = document.getElementById('tooltip-title');
+        const tooltipDesc = document.getElementById('tooltip-desc');
+        const hotspots = document.querySelectorAll('.hotspot');
+        const desktopHint = document.getElementById('desktop-hint');
+
+        let scale = 1;
+        let panning = false;
+        let startX = 0;
+        let startY = 0;
+        let translateX = 0;
+        let translateY = 0;
+        let activeHotspot = null;
+        let hintTimeout = null;
+
+        function updateTransform() {
+            viewport.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            if (activeHotspot) {
+                positionTooltip(activeHotspot);
+            }
+        }
+
+        function initCenter() {
+            const containerW = workspace.clientWidth;
+            const containerH = workspace.clientHeight;
+            scale = Math.min(containerW / 3000, containerH / 2077) * 0.95;
+            translateX = (containerW - 3000 * scale) / 2;
+            translateY = (containerH - 2077 * scale) / 2;
+            updateTransform();
+        }
+
+        window.addEventListener('load', initCenter);
+        window.addEventListener('resize', initCenter);
+
+        // Мышь (перетаскивание)
+        workspace.addEventListener('mousedown', (e) => {
+            panning = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!panning) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            panning = false;
+        });
+
+        // Исправление зума на десктопе: требуем зажатый Ctrl (или Cmd на Mac) для колесика
+        workspace.addEventListener('wheel', (e) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const modifierPressed = isMac ? e.metaKey : e.ctrlKey;
+
+            if (!modifierPressed) {
+                if (window.innerWidth >= 768) {
+                    desktopHint.classList.remove('opacity-0');
+                    clearTimeout(hintTimeout);
+                    hintTimeout = setTimeout(() => {
+                        desktopHint.classList.add('opacity-0');
+                    }, 2000);
+                }
+                return; 
+            }
+
+            e.preventDefault();
+            const zoomFactor = 1.1;
+            const oldScale = scale;
+            if (e.deltaY < 0) {
+                scale = Math.min(scale * zoomFactor, 4);
+            } else {
+                scale = Math.max(scale / zoomFactor, 0.15);
+            }
+
+            const rect = workspace.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            translateX = mouseX - (mouseX - translateX) * (scale / oldScale);
+            translateY = mouseY - (mouseY - translateY) * (scale / oldScale);
+            updateTransform();
+        }, { passive: false });
+
+        // Сенсорное управление (мобильные)
+        let initialDistance = null;
+        let initialScale = null;
+
+        workspace.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                panning = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            } else if (e.touches.length === 2) {
+                panning = false;
+                initialDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                initialScale = scale;
+            }
+        }, { passive: false });
+
+        workspace.addEventListener('touchmove', (e) => {
+            if (e.cancelable) e.preventDefault();
+            
+            if (e.touches.length === 1 && panning) {
+                translateX = e.touches[0].clientX - startX;
+                translateY = e.touches[0].clientY - startY;
+                updateTransform();
+            } else if (e.touches.length === 2 && initialDistance !== null) {
+                const currentDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                
+                const zoomFactor = currentDistance / initialDistance;
+                const oldScale = scale;
+                scale = Math.min(Math.max(initialScale * zoomFactor, 0.15), 4);
+
+                const rect = workspace.getBoundingClientRect();
+                const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+                const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+
+                translateX = centerX - (centerX - translateX) * (scale / oldScale);
+                translateY = centerY - (centerY - translateY) * (scale / oldScale);
+                
+                updateTransform();
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', (e) => {
+            if (e.touches.length < 2) {
+                initialDistance = null;
+                initialScale = null;
+            }
+            if (e.touches.length === 1) {
+                panning = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            } else if (e.touches.length === 0) {
+                panning = false;
+            }
+        });
+
+        // Позиционирование подсказок
+        function positionTooltip(hotspot) {
+            const rect = hotspot.getBoundingClientRect();
+            const padding = 12;
+            const gap = 12;
+
+            tooltip.style.transform = 'none';
+            tooltip.classList.remove('opacity-0');
+
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const x = Math.min(
+                Math.max(rect.left + rect.width / 2, padding + tooltipRect.width / 2),
+                window.innerWidth - padding - tooltipRect.width / 2
+            );
+            const aboveY = rect.top - tooltipRect.height - gap;
+            const y = aboveY >= padding
+                ? aboveY
+                : Math.min(rect.bottom + gap, window.innerHeight - padding - tooltipRect.height);
+
+            tooltip.style.left = `${x - tooltipRect.width / 2}px`;
+            tooltip.style.top = `${Math.max(padding, y)}px`;
+        }
+
+        function showTooltip(e, title, desc) {
+            activeHotspot = e.currentTarget;
+            tooltipTitle.textContent = title;
+            tooltipDesc.textContent = desc;
+            positionTooltip(activeHotspot);
+        }
+
+        function hideTooltip() {
+            activeHotspot = null;
+            tooltip.classList.add('opacity-0');
+        }
+
+        const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+        hotspots.forEach(hotspot => {
+            const title = hotspot.getAttribute('data-title');
+            const desc = hotspot.getAttribute('data-desc');
+
+            if (canHover) {
+                hotspot.addEventListener('mouseenter', (e) => showTooltip(e, title, desc));
+                hotspot.addEventListener('mouseleave', hideTooltip);
+            }
+
+            hotspot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (activeHotspot === e.currentTarget) {
+                    hideTooltip();
+                } else {
+                    showTooltip(e, title, desc);
+                }
+            });
+        });
+
+        document.addEventListener('click', () => {
+            hideTooltip();
+        });
+    </script>
+</body>
+</html>
